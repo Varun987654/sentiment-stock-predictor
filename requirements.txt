@@ -4,4 +4,5 @@ scikit-learn
 transformers
 yfinance
 streamlit
+klogger
 
