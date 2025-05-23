@@ -12,14 +12,15 @@ if not NEWSAPI_KEY:
     log.error("NEWSAPI_KEY is not loaded")
     exit(1)
 
-# Only these two tickers today
+# Tomorrow’s tickers
 TICKERS = {
-    "AAPL": "Apple",
+    "TSLA": "Tesla",
+    "GOOGL": "Google"
 }
 
 def fetch_30_days_per_ticker():
     end_date = datetime.now().date()
-    start_date = end_date - timedelta(days=29)  # inclusive of today = 30 days
+    start_date = end_date - timedelta(days=29)  # inclusive = 30 days
     all_rows = []
 
     for ticker, name in TICKERS.items():
@@ -27,10 +28,10 @@ def fetch_30_days_per_ticker():
         for offset in range(30):
             day = start_date + timedelta(days=offset)
             params = {
-                "q":       f"{ticker} OR \"{name}\"",
-                "from":    day.isoformat(),
-                "to":      day.isoformat(),
-                "language":"en",
+                "q":        f"{ticker} OR \"{name}\"",
+                "from":     day.isoformat(),
+                "to":       day.isoformat(),
+                "language": "en",
                 "pageSize": 100,
                 "page":     1,
                 "sortBy":   "publishedAt",
@@ -52,7 +53,7 @@ def fetch_30_days_per_ticker():
     # Save combined DataFrame
     df = pd.DataFrame(all_rows)
     os.makedirs("data/01_RawNewsHeadlines", exist_ok=True)
-    path = "data/01_RawNewsHeadlines/newsapi_headlines.csv"
+    path = "data/01_RawNewsHeadlines/newsapi_headlines_TSLA_GOOGL.csv"
     df.to_csv(path, index=False)
     log.info(f"Saved {len(df)} total headlines (30 days × {len(TICKERS)} tickers) to {path}")
 
